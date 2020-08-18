@@ -47,9 +47,8 @@
         <div v-if="errorMessage" class="error">
           <p class="error__text">{{ errorMessage }}</p>
         </div>
-        <!-- API繋ぎ直した後にはページ更新しなきゃいけないから（ページ更新すればerrorMessageは消える）errorMessageの中身は消さなくてもいいの？ -->
+
         <template v-if="!errorMessage">
-          <!-- 登録されていないという表示を消したいから... -->
           <div class="todos">
             <template v-if="todos.length">
               <ul class="todos__list">
@@ -65,7 +64,6 @@
                         @click="changeCompleted(todo)"
                       >  
                         <template v-if="todo.completed">
-                          <!-- data()に入ってないものでも取れるのか？？ -->
                           <span>完了</span>
                         </template>
                         <template v-else>
@@ -86,7 +84,8 @@
                         編集
                       </button>
                       <button 
-                        class="todos__btn__delete" type="button"
+                        class="todos__btn__delete" 
+                        type="button"
                         @click="deleteTodo(todo.id)"
                       >
                         削除
@@ -130,22 +129,28 @@ export default {
     };
   },
   created() {
-    axios.get('http://localhost:3000/api/todos/').then(({ data }) => {
+    axios.get('http://localhost:3000/api/todos/').then(({data}) => {
       this.todos = data.todos.reverse();
+      console.log(data);
     }).catch((err) => {
       this.showError(err);
     });
   },
+  // axios.get('http://localhost:3000/api/todos/')
+  //   .then(( {status}) => {
+  //    console.log(status);
+  //   });
+  // },
 
   methods: {
     initTargetTodo() {
-      return{
+      return {
         id: null,
         title: '',
         detail: '',
         completed: false,
       }
-    }
+    },
     hideError() {
       this.errorMessage = '';
     },
@@ -163,15 +168,16 @@ export default {
       });
       axios.post('http://localhost:3000/api/todos/', postTodo).then(({data}) => {
         this.todos.unshift(data);
-        this.targetTodo = this.initTargetTodo()
+        this.targetTodo = this.initTargetTodo();
         this.hideError();
+        // console.log(event);
       }).catch((err) => {
         this.showError(err); 
       });
     },
     changeCompleted(todo) {
-      // ↑ここの引数はid???
-      this.targetTodo = this.initTargetTodo()
+      //ここの引数はイベントオブジェクト
+      this.targetTodo = this.initTargetTodo();
       const targetTodo = Object.assign({}, todo);
       axios.patch(`http://localhost:3000/api/todos/${targetTodo.id}`, {
         completed: !targetTodo.completed,
@@ -207,6 +213,7 @@ export default {
 
     deleteTodo(id) {
       this.targetTodo = this.initTargetTodo()
+      // 編集ボタン後に押すとtargetTodoに値が残ってしまう
       axios.delete(`http://localhost:3000/api/todos/${id}`).then(({ data }) => {
         this.todos = data.todos.reverse();
         this.hideError();
@@ -422,3 +429,35 @@ export default {
   background-color: #ddd;
 }
 </style>
+
+
+
+質問
+分割代入
+引数に指定されたオブジェクト属性への参照
+
+const user = {
+  id: 42,
+  name: Mayu,
+}
+
+function userId( {id} ) {
+  return id;
+}
+
+console.log(userId(user));
+
+
+const {a,c} = obj;
+
+created() {
+  axios.get(' URL ')
+    .then(({ data }) => {
+    	this.todos = data.todos.reverse();
+    }
+}
+
+
+元のデータ？？
+
+

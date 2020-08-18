@@ -15,15 +15,20 @@ const store = new Vuex.Store({
       detail: '',
       completed: '',
     },
-    errorMessage: 'エラーが起きました。',
-    emptyMessage: 'やることリストは空です。',
+    errorMessage: '',
+    emptyMessage: '',
   },
+
+
   getters: {
     completedTodos: (state) => state.todos.filter((todo) => todo.completed),
     incompleteTodos: (state) => state.todos.filter((todo) => !todo.completed),
     completedTodosLength: (state, getters) => getters.completedTodos.length,
     incompleteTodosLength: (state, getters) => getters.incompleteTodos.length,
   },
+
+
+
   mutations: {
     setTodoFilter(state, routeName) {
       state.todoFilter = routeName;
@@ -73,7 +78,14 @@ const store = new Vuex.Store({
         return todoItem;
       });
     },
+    //payloadのところに、持たせたdataが入るの？
+    deletedTodo(state, payload) {
+      state.todos = payload.reverse();
+    }
   },
+
+
+
   actions: {
     setTodoFilter({ commit }, routeName) {
       commit('setTodoFilter', routeName);
@@ -145,9 +157,9 @@ const store = new Vuex.Store({
     },
     deleteTodo({ commit }, todoId) {
       axios.delete(`http://localhost:3000/api/todos/${todoId}`).then(({ data }) => {
-        // 処理
+        commit('deletedTodo', data);
       }).catch((err) => {
-        // 処理
+        commit('showError', err.response);
       });
       // 必要があれば処理
     },

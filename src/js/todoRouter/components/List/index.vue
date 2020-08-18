@@ -10,6 +10,7 @@
       @showEditor="$emit('showEditor', todo)"
       @deleteTodo="$emit('deleteTodo', todo.id)"
     />
+    <!-- なんでchangeCompletedはtodo.idでなくtodoを引数にとるのか？？ -->
   </ul>
 </template>
 

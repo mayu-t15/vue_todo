@@ -24,6 +24,7 @@
       v-if="errorMessage"
       :error-message="errorMessage"
     />
+    
     <template v-slot:todos>
       <app-list
         v-if="filteredTodos.length"
@@ -157,6 +158,7 @@ export default {
     changeCompleted(todo) {
       this.targetTodo = this.initTargetTodo();
       const targetTodo = Object.assign({}, todo);
+      // なぜ最初からtodo.idを取ってこないのか？
       axios.patch(`http://localhost:3000/api/todos/${targetTodo.id}`, {
         completed: !targetTodo.completed,
       }).then(({ data }) => {
@@ -174,6 +176,7 @@ export default {
     },
     editTodo() {
       const targetTodo = this.todos.find(todo => todo.id === this.targetTodo.id);
+      //編集前のtodoを入れたもの
       if (
         targetTodo.title === this.targetTodo.title
         && targetTodo.detail === this.targetTodo.detail

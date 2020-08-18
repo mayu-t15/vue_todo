@@ -32,7 +32,7 @@ const config = {
     hot: true,
     port: 8080,
     contentBase: dist,
-    // historyApiFallback: true,
+    historyApiFallback: true,
   },
   entry: {
     index: `${src}/js/index.js`
@@ -40,6 +40,7 @@ const config = {
   output: {
     filename: 'js/[name].js',
     path: dist,
+    // distってどこにあるの？？
   },
   module: {
     rules: [
